@@ -34,7 +34,7 @@ class LogStash::Filters::Sentimentalizer < LogStash::Filters::Base
   def filter(event)
     return unless filter?(event)
 
-    source = event[@source]
+    source = event.get(@source)
     source.gsub!(/\B#(\S+)\b/, '\1') if @scrub
 
     if !source.nil?
@@ -45,10 +45,10 @@ class LogStash::Filters::Sentimentalizer < LogStash::Filters::Base
       end
 
       if !sentiment.nil?
-        event[@target] = {
+        event.set(@target, {
           'probability' => sentiment.overall_probability,
           'polarity'    => sentiment.sentiment,
-        }
+        })
       end
     end
 
